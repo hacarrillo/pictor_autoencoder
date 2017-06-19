@@ -35,13 +35,16 @@ cr1 = "cr1_cropg.jpg"
 _input_ = np.float32(cv2.imread(data_path + pictor,cv2.IMREAD_GRAYSCALE))
 iw, ih = _input_.shape
 input_ = cv2.normalize(_input_, None, alpha=0, beta=1, norm_type=cv2.NORM_MINMAX, dtype=cv2.CV_32FC1)
+# input_ = cv2.resize(input_, None,fx=2, fy= 2, interpolation=cv2.INTER_LANCZOS4)
 input_ = cv2.resize(input_, None,fx=0.08333333, fy= 0.11111111, interpolation=cv2.INTER_LANCZOS4)
 input_ = np.asarray(input_)
+print("input shape {0}".format(input_.shape))
 input_ = np.reshape(input_, (1,128,128,1))
 # the target output
 _target_ = np.float32(cv2.imread(data_path + cr1, cv2.IMREAD_GRAYSCALE))
 tw, th = _target_.shape
 target_ = cv2.normalize(_target_, None, alpha=0, beta=1, norm_type=cv2.NORM_MINMAX, dtype=cv2.CV_32FC1)
+# target = cv2.resize(target_, None, fx=2, fy=2, interpolation=cv2.INTER_CUBIC)
 target = cv2.resize(target_, None, fx=.0808080808, fy=0.0808080808, interpolation=cv2.INTER_CUBIC)
 target = np.asarray(target)
 target = np.reshape(target, (1,256,256,1))
@@ -101,15 +104,12 @@ with tf.name_scope("pictor_encoder") as scope:
 
 		# features = tf.reshape(out4, shape=[1,-1])
 
-with tf.name_scope("pictor_decode") as scope:
+# with tf.name_scope("pictor_decode") as scope:
 	# filters1_ = 1
 	# w1_ = weight_variable([3,3,filters1_,filters1],name = "w1_", )
 	# b1_ = bias_variable([1], name = "b1_", )
 	# out1_ = tf.nn.conv2d_transpose(out1,w1_, output_shape=[1,128,128,filters1_], strides=[1,1,1,1], padding = "SAME")
 	# reconstruction = out1_ + b1_
-
-
-
 
 error = tf.multiply(.5,tf.reduce_mean(tf.square(tf.subtract(reconstruction,x))))
 
